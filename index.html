@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pay for OTP | AfrikBerry One-Tap</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,sans-serif}
+  body{background:#0f1115;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{background:#181b22;border:1px solid #2a2f3a;border-radius:16px;padding:28px;width:100%;max-width:420px}
+  h1{font-size:20px;margin-bottom:6px}
+  .sub{color:#9aa3b2;font-size:14px;margin-bottom:22px}
+  .price{font-size:36px;font-weight:700;margin-bottom:4px}
+  .label{color:#9aa3b2;font-size:12px;margin-top:16px}
+  .val{font-size:18px;font-weight:600;margin-top:2px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .copy{background:#2a2f3a;color:#fff;border:0;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer}
+  .btn{width:100%;margin-top:16px;background:#f5a623;color:#111;border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:700;cursor:pointer}
+  .btn:disabled{opacity:.6;cursor:default}
+  .note{color:#9aa3b2;font-size:12px;margin-top:12px;text-align:center}
+  .done{text-align:center;display:none}
+  .done .tick{font-size:56px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="card" id="pay">
+  <h1>OTP for AfrikBerry Dashboard</h1>
+  <p class="sub">Pay once to activate phone verification (OTP).</p>
+
+  <div class="price">₦30,000</div>
+
+  <div class="label">Bank</div>
+  <div class="val">Kredi Money Mfb Ltd</div>
+
+  <div class="label">Account name</div>
+  <div class="val">Raenest/Daniel Joseph Adeogun</div>
+
+  <div class="label">Account number</div>
+  <div class="row">
+    <div class="val" id="acct">1809987544</div>
+    <button class="copy" onclick="copyAcct(this)">Copy</button>
+  </div>
+
+  <input id="payer" placeholder="Your name or phone number" style="width:100%;margin-top:22px;padding:13px;border-radius:10px;border:1px solid #2a2f3a;background:#0f1115;color:#fff;font-size:15px">
+
+  <button class="btn" id="paidBtn" onclick="paid()">I have sent the money</button>
+  <p class="note">Tap after you have made the transfer.</p>
+</div>
+
+<div class="card done" id="done">
+  <div class="tick">✅</div>
+  <h1>Your OTP is live</h1>
+  <p class="sub" style="margin-top:8px">Thank you. Phone verification is now active on AfrikBerry One-Tap.</p>
+</div>
+
+<script>
+  const ACCESS_KEY = "PASTE_YOUR_KEY_HERE";
+
+  function copyAcct(b){
+    navigator.clipboard.writeText(document.getElementById("acct").innerText);
+    b.innerText = "Copied";
+    setTimeout(()=>b.innerText="Copy",1500);
+  }
+
+  async function paid(){
+    const who = document.getElementById("payer").value.trim();
+    if(!who){ alert("Please enter your name or phone number"); return; }
+
+    const btn = document.getElementById("paidBtn");
+    btn.disabled = true;
+    btn.innerText = "Please wait...";
+
+    try{
+      await fetch("https://api.web3forms.com/submit",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          access_key: ACCESS_KEY,
+          subject: "OTP payment claimed: ₦30,000",
+          message: who + " says they have paid ₦30,000 for the AfrikBerry OTP. Check your Raenest before switching it on."
+        })
+      });
+    }catch(e){}
+
+    document.getElementById("pay").style.display = "none";
+    document.getElementById("done").style.display = "block";
+  }
+</script>
+</body>
+</html>
