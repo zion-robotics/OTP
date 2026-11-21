@@ -15,7 +15,7 @@
   .val{font-size:18px;font-weight:600;margin-top:2px}
   .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .copy{background:#2a2f3a;color:#fff;border:0;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer}
-  .btn{width:100%;margin-top:16px;background:#f5a623;color:#111;border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:700;cursor:pointer}
+  .btn{width:100%;margin-top:26px;background:#f5a623;color:#111;border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:700;cursor:pointer}
   .btn:disabled{opacity:.6;cursor:default}
   .note{color:#9aa3b2;font-size:12px;margin-top:12px;text-align:center}
   .done{text-align:center;display:none}
@@ -41,8 +41,6 @@
     <button class="copy" onclick="copyAcct(this)">Copy</button>
   </div>
 
-  <input id="payer" placeholder="Your name or phone number" style="width:100%;margin-top:22px;padding:13px;border-radius:10px;border:1px solid #2a2f3a;background:#0f1115;color:#fff;font-size:15px">
-
   <button class="btn" id="paidBtn" onclick="paid()">I have sent the money</button>
   <p class="note">Tap after you have made the transfer.</p>
 </div>
@@ -63,9 +61,6 @@
   }
 
   async function paid(){
-    const who = document.getElementById("payer").value.trim();
-    if(!who){ alert("Please enter your name or phone number"); return; }
-
     const btn = document.getElementById("paidBtn");
     btn.disabled = true;
     btn.innerText = "Please wait...";
@@ -76,8 +71,8 @@
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
           access_key: ACCESS_KEY,
-          subject: "OTP payment claimed: ₦30,000",
-          message: who + " says they have paid ₦30,000 for the AfrikBerry OTP. Check your Raenest before switching it on."
+          subject: "AfrikBerry says they have paid for the OTP",
+          message: "AfrikBerry tapped 'I have sent the money' for the ₦30,000 OTP payment. Check your Raenest before switching it on."
         })
       });
     }catch(e){}
